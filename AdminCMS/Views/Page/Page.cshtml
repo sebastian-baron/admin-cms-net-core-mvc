@@ -1,0 +1,77 @@
+﻿@model AdminCMS.Core.ViewModels.PageViewModel
+
+@{
+    ViewBag.Title = Model.Heading;
+}
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Subpage</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Starter Page</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <h1>@Model.Heading</h1>
+
+                    @using (Html.BeginForm("Page", "Page"))
+                    {
+                        <p class="alert alert-info mt-4 mb-4">Field Name, Category is required.</p>
+
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(x => x.Page.Id)
+
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Page.Name)
+                            @Html.TextBoxFor(x => x.Page.Name, new { @class = "form-control", autofocus = "autofocus" })
+                            @Html.ValidationMessageFor(x => x.Page.Name)
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Page.ShortDescription)
+                            @Html.TextBoxFor(x => x.Page.ShortDescription, new { @class = "form-control" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Page.Description)
+                            @Html.TextBoxFor(x => x.Page.Description, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Page.Description)
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Page.CategoryId)
+                            @Html.DropDownListFor(x => x.Page.CategoryId,
+                                new SelectList(Model.Categories, "Id", "Name"),
+                                "-- wybierz kategorię --",
+                                new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Page.CategoryId)
+                        </div>
+
+
+                        <div class="form-check">
+                            @Html.CheckBoxFor(x => x.Page.IsActive, new { @class = "form-check-input" })
+                            @Html.LabelFor(x => x.Page.IsActive)
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg mt-2">Save</button>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

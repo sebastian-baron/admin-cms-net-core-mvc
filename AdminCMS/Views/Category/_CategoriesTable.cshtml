@@ -1,0 +1,40 @@
+﻿@model IEnumerable<AdminCMS.Core.Models.Domains.Category>
+
+<div class="card-body table-responsive p-0">
+    <table id="categoriesTable" class="table table-hover text-nowrap">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+                <th>Kategoria</th>
+                <th>Aktywny</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var category in Model)
+                {
+                    <tr>
+                        <td>@category.Id</td>
+                        <td><a href="@Url.Action("Category", "Category", new { id = category.Id } )">@category.Name</a></td>
+                        <td>@category.Name</td>
+                        <td>@category.IsActive</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteCategory('@category.Id', this)">
+                                Usuń
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="5">Brak kategorii do wyświetlenia</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

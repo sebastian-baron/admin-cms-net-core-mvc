@@ -1,0 +1,55 @@
+﻿@model IEnumerable<AdminCMS.Core.Models.Domains.Page>
+
+<div class="card-body table-responsive p-0">
+    <table id="pagesTable" class="table table-hover text-nowrap">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Active</th>
+                <th>Created date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td><a href="@Url.Action("Page", "Page", new { id = item.Id } )">@item.Name</a></td>
+                        <td>@item.Category.Name</td>
+                        <td>@item.IsActive</td>
+                        <td>@item.CreatedDate.ToString("dd-MM-yyyy")</td>
+                        <td>
+                            @if (!item.IsActive)
+                            {
+                                <button class="btn btn-success btn-sm mr-2" onclick="activePage('@item.Id', this)">
+                                    Activate
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-warning btn-sm mr-2" onclick="hidePage('@item.Id', this)">
+                                    Hide
+                                </button>
+                            }
+
+                            <button class="btn btn-danger btn-sm" onclick="deletePage('@item.Id', this)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="6">There are no pages to display</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

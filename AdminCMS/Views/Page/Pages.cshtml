@@ -1,0 +1,165 @@
+﻿@model AdminCMS.Core.ViewModels.PagesViewModel
+
+@{
+    ViewData["Title"] = "All pages";
+}
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">All pages</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Starter Page</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form id="filterForm">
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+                                @Html.TextBoxFor(x => x.FilterPages.Title, new { @class = "form-control mb-2", placeholder = "Name" })
+                            </div>
+                            <div class="col-auto">
+                                @Html.DropDownListFor(x => x.FilterPages.CategoryId,
+                                    new SelectList(Model.Categories, "Id", "Name"),
+                                    "-- wybierz kategorię --", new { @class = "form-control mb-2" })
+                            </div>
+                            <div class="col-auto">
+                                <div class="form-check mb-2">
+                                    @Html.CheckBoxFor(x => x.FilterPages.IsActive, new { @class = "form-check-label" })
+                                    @Html.LabelFor(x => x.FilterPages.IsActive)
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" id="filterSearchBtn" class="btn btn-primary mb-2">Search</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div>
+                        @await Html.PartialAsync("_PagesTable.cshtml", Model.Pages)
+                    </div>
+
+                    @section Scripts
+    {
+                        <script>
+            $(document).ready(function () {
+
+                $('#filterForm').submit(function () {
+                    console.log($(this).serialize());
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("Pages", "Page")",
+                        data: $(this).serialize(),
+                        success: function (data) {
+                            $('#pagesTable').html(data);
+                        },
+                        error: function (data) {
+                            alert(data.message)
+                        },
+                        dataType: "html"
+                    });
+
+                    return false;
+                });
+            });
+
+            function activePage(id, btn) {
+                if (!confirm("Are you sure you want to make an active subpage?"))
+                return;
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Active", "Page")",
+                    data: {
+                        id: id
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#filterSearchBtn").click();
+                        }
+                        else {
+                            alert(data.message)
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.message)
+
+                     },
+                    dataType: "json"
+                });
+            }
+
+            function hidePage(id, btn) {
+                if (!confirm("Are you sure you want to hide the subpage?"))
+                    return;
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Hide", "Page")",
+                    data: {
+                        id: id
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#filterSearchBtn").click();
+                        }
+                        else {
+                            alert(data.message)
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.message)
+
+                     },
+                    dataType: "json"
+                });
+            }
+
+
+
+            function deletePage(id, btn) {
+                if (!confirm("Are you sure you want to delete the subpage?"))
+                return;
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Delete", "Page")",
+                    data: {
+                        id: id
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            var row = btn.parentNode.parentNode;
+                            row.parentNode.removeChild(row);
+                        }
+                        else {
+                            alert(data.message)
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.message)
+
+                     },
+                    dataType: "json"
+                });
+            }
+
+
+                        </script>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
